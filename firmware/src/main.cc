@@ -242,6 +242,8 @@ int main() {
     gpio_pins_init();
 #ifdef I2C_ENABLED
     our_i2c_init();
+    oled_init(0x3C);
+    oled_clear();
 #endif
 #ifdef ADC_ENABLED
     adc_pins_init();
@@ -259,6 +261,7 @@ int main() {
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
+    
 
     while (true) {
         bool tick;
