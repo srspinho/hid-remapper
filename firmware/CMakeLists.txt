@@ -63,6 +63,7 @@ target_include_directories(remapper PRIVATE
     src
     src/tusb_config_both
     ${PICO_PIO_USB_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/Adafruit_SSD1306
 )
 
 target_link_libraries(remapper
