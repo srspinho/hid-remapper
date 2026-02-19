@@ -1,5 +1,4 @@
 #pragma once
-#include "hardware/i2c.h"
 #include <stdint.h>
 #include <stdbool.h>
 
