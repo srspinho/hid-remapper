@@ -49,8 +49,8 @@ add_executable(remapper
     src/ps_auth.cc
     src/app_driver.cc
     src/xbox.cc
-    src/lib/Adafruit_SSD1306/Adafruit_SSD1306.cpp
-    src/lib/Adafruit_SSD1306/Adafruit_GFX.cpp
+    lib/Adafruit_SSD1306/Adafruit_SSD1306.cpp
+    lib/Adafruit_SSD1306/Adafruit_GFX.cpp
 )
 
 if((PICO_BOARD STREQUAL "pico") OR (PICO_BOARD STREQUAL "pico2"))
