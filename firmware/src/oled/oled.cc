@@ -5,6 +5,7 @@
 
 #define SDA_PIN 20
 #define SCL_PIN 21
+#define OLED_ADDR 0x3C
 
 #define OLED_BUFFER_SIZE (OLED_WIDTH * OLED_HEIGHT / 8)
 
