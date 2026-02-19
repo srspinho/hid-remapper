@@ -7,7 +7,7 @@
 #define OLED_HEIGHT  64
 #define OLED_ADDR    0x3C
 
-void oled_init();
+void oled_init(i2c_inst_t* i2c);
 void oled_update();
 void oled_clear();
 
