@@ -9,25 +9,28 @@
 
 static uint8_t oled_buffer[OLED_BUFFER_SIZE];
 
+static i2c_inst_t* oled_i2c;
+
 static void oled_write_cmd(uint8_t cmd)
 {
     uint8_t buf[2] = {0x00, cmd};
-    i2c_write_blocking(i2c1, OLED_ADDR, buf, 2, false);
+    i2c_write_blocking(oled_i2c, OLED_ADDR, buf, 2, false);
 }
 
 static void oled_write_data(uint8_t* data, size_t len)
 {
     uint8_t temp[129];
     temp[0] = 0x40;
+
     for (size_t i = 0; i < len; i++)
         temp[i + 1] = data[i];
 
-    i2c_write_blocking(i2c1, OLED_ADDR, temp, len + 1, false);
+    i2c_write_blocking(oled_i2c, OLED_ADDR, temp, len + 1, false);
 }
 
-void oled_init()
+void oled_init(i2c_inst_t* i2c)
 {
-    i2c_init(i2c1, 400 * 1000);
+    oled_i2c = i2c;
 
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
