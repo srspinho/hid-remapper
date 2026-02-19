@@ -56,6 +56,8 @@ target_compile_definitions(remapper PUBLIC PICO_DEFAULT_UART_RX_PIN=17)
 target_compile_definitions(remapper PUBLIC PICO_DEFAULT_PIO_USB_DP_PIN=0)
 endif()
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE I2C_ENABLED=1)
+
 target_include_directories(remapper PRIVATE
     src
     src/tusb_config_both
