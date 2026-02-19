@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.13)
 
 add_subdirectory(usb_midi_host)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/Adafruit_SSD1306)
-
 add_compile_definitions(PICO_DEFAULT_UART_BAUD_RATE=921600)
 add_compile_definitions(PERSISTED_CONFIG_SIZE=4096)
 add_compile_definitions(PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
@@ -49,8 +47,6 @@ add_executable(remapper
     src/ps_auth.cc
     src/app_driver.cc
     src/xbox.cc
-    lib/Adafruit_SSD1306/Adafruit_SSD1306.cpp
-    lib/Adafruit_SSD1306/Adafruit_GFX.cpp
 )
 
 if((PICO_BOARD STREQUAL "pico") OR (PICO_BOARD STREQUAL "pico2"))
@@ -63,7 +59,6 @@ target_include_directories(remapper PRIVATE
     src
     src/tusb_config_both
     ${PICO_PIO_USB_PATH}
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/Adafruit_SSD1306
 )
 
 target_link_libraries(remapper
