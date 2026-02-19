@@ -243,7 +243,7 @@ int main() {
     gpio_pins_init();
 #ifdef I2C_ENABLED
     oled_init(I2C_BLOCK);
-    oled_init(0x3C);
+    //oled_init(0x3C);
     oled_clear();
 #endif
 #ifdef ADC_ENABLED
