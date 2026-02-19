@@ -1,6 +1,7 @@
 #include "oled.h"
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
+#include "hardware/i2c.h"
 
 #define SDA_PIN 20
 #define SCL_PIN 21
