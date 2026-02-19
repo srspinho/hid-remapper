@@ -47,6 +47,7 @@ add_executable(remapper
     src/ps_auth.cc
     src/app_driver.cc
     src/xbox.cc
+    src/oled/oled.cc
 )
 
 if((PICO_BOARD STREQUAL "pico") OR (PICO_BOARD STREQUAL "pico2"))
@@ -74,6 +75,7 @@ target_link_libraries(remapper
     tinyusb_board
     tinyusb_pico_pio_usb
     usb_midi_host
+    hardware_i2c
 )
 
 pico_set_binary_type(remapper copy_to_ram)
