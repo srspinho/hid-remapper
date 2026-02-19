@@ -242,7 +242,7 @@ int main() {
     my_mutexes_init();
     gpio_pins_init();
 #ifdef I2C_ENABLED
-    our_i2c_init();
+    oled_init(I2C_BLOCK);
     oled_init(0x3C);
     oled_clear();
 #endif
