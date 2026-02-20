@@ -290,7 +290,7 @@ int main() {
         last_value = current;
     }
     sleep_ms(50);
-}
+//}
 
 #endif
 
