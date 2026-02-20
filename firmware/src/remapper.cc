@@ -1661,7 +1661,7 @@ void do_handle_received_report(const uint8_t* report, int len, uint16_t interfac
     uint8_t interface_idx = interface_index[interface];
     uint8_t hub_port = hub_ports[interface >> 8];
     //Colocar a variável de verificação
-    int32_t before = *state_ptr;
+    //int32_t before = *state_ptr;
     
     if (hub_port != HUB_PORT_NONE) {
         active_ports_mask |= 1 << hub_port;
