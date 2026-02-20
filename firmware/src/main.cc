@@ -373,7 +373,7 @@ int main() {
             oled_clear();
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
             oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
-
+            oled_update();  // <- envia os dados do buffer para o display
             last_value = current;
         }
 #endif
