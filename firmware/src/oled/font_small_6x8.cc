@@ -8,7 +8,7 @@
 #define FONT_SMALL_WIDTH   6
 #define FONT_SMALL_HEIGHT  8
 
-static const uint8_t font_small_6x8[] = {
+const uint8_t font_small_6x8[] = {
 
     // 0x20 ' '
     0x00,0x00,0x00,0x00,0x00,0x00,
