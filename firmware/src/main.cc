@@ -59,7 +59,7 @@
     char buffer_oled[16];               // buffer para string
 #endif
 
-char buffer_oled[16];      // buffer para string
+//char buffer_oled[16];      // buffer para string
 extern volatile uint32_t key_down_counter;
 
 uint64_t next_print = 0;
