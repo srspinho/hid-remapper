@@ -92,6 +92,7 @@ pico_add_extra_outputs(remapper)
 add_executable(remapper_dual_a
     src/main.cc
     src/remapper.cc
+    src/oled/oled.cc
     src/remapper_dual_a.cc
     src/crc.cc
     src/descriptor_parser.cc
