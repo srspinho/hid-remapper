@@ -53,8 +53,12 @@
 //#define I2C_ENABLED
 #define I2C_BLOCK i2c0
 
-// Lat_couter para contagem de teclas
-static uint32_t last_counter = 0;
+
+#ifdef I2C_ENABLED
+    static uint32_t last_counter = 0;  // guarda último valor mostrado no display
+    char buffer_oled[16];               // buffer para string
+#endif
+
 char buffer_oled[16];      // buffer para string
 extern volatile uint32_t key_down_counter;
 
@@ -308,96 +312,76 @@ int main() {
             if (gpio_state_changed) {
                 activity_led_on();
             }
-#ifdef ADC_ENABLED
-            read_adc();
-#endif
-            process_mapping(true);
-            write_gpio();
-#ifdef MCP4651_ENABLED
-            mcp4651_write();
-#endif
-        }
-
-        tud_task();
-
-        if (boot_protocol_updated) {
-            parse_our_descriptor();
-            boot_protocol_updated = false;
-            config_updated = true;
-        }
-
-        if (resume_pending) {
-            resume_pending = false;
-            suspended = false;
-        }
-
-        if (config_updated) {
-            set_mapping_from_config();
-            config_updated = false;
-        }
-
-        if (set_gpio_dir_pending && !suspended) {
-            set_gpio_dir();
-            set_gpio_dir_pending = false;
-        }
-
-        if (tud_hid_n_ready(0) || tud_suspended()) {
-            send_report(do_send_report);
-        }
-
-        if (monitor_enabled && tud_hid_n_ready(1)) {
-            send_monitor_report(do_send_report);
-        }
-
-        if (our_descriptor->main_loop_task != nullptr) {
-            our_descriptor->main_loop_task();
-        }
-
-        send_out_report();
-
-        if (need_to_persist_config) {
-            persist_config_return_code = persist_config();
-            need_to_persist_config = false;
-        }
-
-        print_stats_maybe();
-
-#ifdef I2C_ENABLED
-        // ===== ATUALIZA OLED COM CONTADOR =====
-        uint32_t current = key_down_counter;
-
-        /*
-        if (current != last_value) {
-
-            char buffer[32];
-            snprintf(buffer, sizeof(buffer), "Count: %lu", current);
-
-            oled_clear();
-            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
-            oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
-            oled_update();  // <- envia os dados do buffer para o display
+        #ifdef ADC_ENABLED
+                    read_adc();
+        #endif
+                    process_mapping(true);
+                    write_gpio();
+        #ifdef MCP4651_ENABLED
+                    mcp4651_write();
+        #endif
+                }
+        
+                tud_task();
+        
+                if (boot_protocol_updated) {
+                    parse_our_descriptor();
+                    boot_protocol_updated = false;
+                    config_updated = true;
+                }
+        
+                if (resume_pending) {
+                    resume_pending = false;
+                    suspended = false;
+                }
+        
+                if (config_updated) {
+                    set_mapping_from_config();
+                    config_updated = false;
+                }
+        
+                if (set_gpio_dir_pending && !suspended) {
+                    set_gpio_dir();
+                    set_gpio_dir_pending = false;
+                }
+        
+                if (tud_hid_n_ready(0) || tud_suspended()) {
+                    send_report(do_send_report);
+                }
+        
+                if (monitor_enabled && tud_hid_n_ready(1)) {
+                    send_monitor_report(do_send_report);
+                }
+        
+                if (our_descriptor->main_loop_task != nullptr) {
+                    our_descriptor->main_loop_task();
+                }
+        
+                send_out_report();
+        
+                if (need_to_persist_config) {
+                    persist_config_return_code = persist_config();
+                    need_to_persist_config = false;
+                }
+        
+                print_stats_maybe();
+        
+        #ifdef I2C_ENABLED
+            if (key_down_counter != last_counter) {
+                last_counter = key_down_counter;
+        
+                oled_clear();
+                oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+        
+                snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
+                oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+        
+                oled_update();
             }
-            
-            */
-
-        if (key_down_counter != last_counter) {
-            last_counter = key_down_counter;
-            
-            oled_clear();
-            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+        #endif
         
-            // converte contador para string
-            snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
-            oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+                activity_led_off_maybe();
+      }
         
-            oled_update();  // envia para o display
-        
-            last_value = current;
-        }
-#endif
-
-        activity_led_off_maybe();
-    }
-
-    return 0;
+            return 0;
 }
