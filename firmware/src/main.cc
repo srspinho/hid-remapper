@@ -279,25 +279,29 @@ int main() {
     oled_init(I2C_BLOCK);
     oled_clear();
     oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
-
-    #endif
+#endif
 
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
 
+    static uint32_t last_value = 0;   // <<< ADICIONADO AQUI
+
     while (true) {
-        static uint32_t last_value = 0;
+
         bool tick;
         bool new_report;
         read_report(&new_report, &tick);
+
         if (new_report) {
             activity_led_on();
         }
+
         if (their_descriptor_updated) {
             update_their_descriptor_derivates();
             their_descriptor_updated = false;
         }
+
         if (tick) {
             bool gpio_state_changed = read_gpio(time_us_64());
             if (gpio_state_changed) {
@@ -312,40 +316,67 @@ int main() {
             mcp4651_write();
 #endif
         }
+
         tud_task();
+
         if (boot_protocol_updated) {
             parse_our_descriptor();
             boot_protocol_updated = false;
             config_updated = true;
         }
+
         if (resume_pending) {
             resume_pending = false;
             suspended = false;
         }
+
         if (config_updated) {
             set_mapping_from_config();
             config_updated = false;
         }
+
         if (set_gpio_dir_pending && !suspended) {
             set_gpio_dir();
             set_gpio_dir_pending = false;
         }
+
         if (tud_hid_n_ready(0) || tud_suspended()) {
             send_report(do_send_report);
         }
+
         if (monitor_enabled && tud_hid_n_ready(1)) {
             send_monitor_report(do_send_report);
         }
+
         if (our_descriptor->main_loop_task != nullptr) {
             our_descriptor->main_loop_task();
         }
+
         send_out_report();
+
         if (need_to_persist_config) {
             persist_config_return_code = persist_config();
             need_to_persist_config = false;
         }
 
         print_stats_maybe();
+
+#ifdef I2C_ENABLED
+        // ===== ATUALIZA OLED COM CONTADOR =====
+        uint32_t current = key_down_counter;
+
+        if (current != last_value) {
+
+            char buffer[32];
+            snprintf(buffer, sizeof(buffer), "Count: %lu", current);
+
+            oled_clear();
+            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+            oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
+
+            last_value = current;
+        }
+#endif
 
         activity_led_off_maybe();
     }
