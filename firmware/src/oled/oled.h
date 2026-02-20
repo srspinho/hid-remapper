@@ -1,6 +1,9 @@
 #pragma once
 #include <stdint.h>
 
+#define OLED_WIDTH   128
+#define OLED_HEIGHT   64
+
 #ifdef __cplusplus
 extern "C" {
 #endif
