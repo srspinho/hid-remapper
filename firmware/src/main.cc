@@ -48,6 +48,9 @@
 
 #define ADC_USAGE_PAGE 0xFFF80000
 
+#define SDA_PIN 20
+#define SCL_PIN 21
+
 uint64_t next_print = 0;
 
 mutex_t mutexes[(uint8_t) MutexId::N];
