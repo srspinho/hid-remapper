@@ -266,6 +266,10 @@ int main() {
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
+
+    oled_clear();
+    oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+    oled_update();
     
 
     while (true) {
