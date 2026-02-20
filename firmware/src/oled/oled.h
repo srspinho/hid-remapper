@@ -8,7 +8,8 @@
 extern "C" {
 #endif
 
-void oled_init(void);
+//void oled_init(void);
+void oled_init(i2c_inst_t* i2c);
 void oled_clear(void);
 void oled_update(void);
 
