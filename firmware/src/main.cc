@@ -376,6 +376,8 @@ int main() {
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
             oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
             oled_update();  // <- envia os dados do buffer para o display
+            }
+            
             */
 
         if (key_down_counter != last_counter) {
@@ -385,11 +387,10 @@ int main() {
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
         
             // converte contador para string
-            snprintf(buffer, sizeof(buffer), "%d", key_down_counter);
+            snprintf(buffer, sizeof(buffer), "%lu", key_down_counter);
             oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
         
             oled_update();  // envia para o display
-}
         
             last_value = current;
         }
