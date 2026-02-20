@@ -367,7 +367,7 @@ int main() {
                 print_stats_maybe();
         
         #ifdef I2C_ENABLED
-            if (key_down_counter != last_counter) {
+            //if (key_down_counter != last_counter) {
                 last_counter = key_down_counter;
         
                 oled_clear();
@@ -377,7 +377,7 @@ int main() {
                 oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
         
                 oled_update();
-            }
+            //}
         #endif
         
                 activity_led_off_maybe();
