@@ -11,7 +11,8 @@
 
 static uint8_t oled_buffer[OLED_BUFFER_SIZE];
 
-static i2c_inst_t* oled_i2c;
+//static i2c_inst_t* oled_i2c;
+static i2c_inst_t* oled_i2c = NULL;
 
 static void oled_write_cmd(uint8_t cmd)
 {
