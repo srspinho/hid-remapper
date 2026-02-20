@@ -53,6 +53,9 @@
 #define I2C_ENABLED
 #define I2C_BLOCK i2c0
 
+// Lat_couter para contagem de teclas
+static uint32_t last_counter = 0;
+
 uint64_t next_print = 0;
 
 mutex_t mutexes[(uint8_t) MutexId::N];
@@ -274,8 +277,17 @@ int main() {
     gpio_pull_up(SCL_PIN);
     oled_init(I2C_BLOCK);
     oled_clear();
-    oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
-    oled_update();
+    //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+
+    if (last_counter != key_down_counter) {
+        last_counter = key_down_counter;
+        oled_clear();
+        char buf[32];
+        sprintf(buf, "Keys: %lu", key_down_counter);
+        oled_draw_string(0, 0, buf, font_small_6x8, 6, 8);
+        oled_update();
+}
+    //oled_update();
 #endif
 
     tud_sof_isr_set(sof_handler);
