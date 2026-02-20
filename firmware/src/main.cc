@@ -275,7 +275,8 @@ int main() {
     tusb_init();
     stdio_init_all();
 
-#ifdef I2C_ENABLED
+    /*
+    #ifdef I2C_ENABLED
     i2c_init(I2C_BLOCK, 400000);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
@@ -284,6 +285,12 @@ int main() {
     oled_init(I2C_BLOCK);
     //oled_clear();
     //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+#endif
+*/
+#ifdef I2C_ENABLED
+    oled_clear();
+    oled_draw_string(0, 0, "TESTE OLED", font_small_6x8, 6, 8);
+    oled_update();
 #endif
 
     tud_sof_isr_set(sof_handler);
@@ -365,7 +372,7 @@ int main() {
                 }
         
                 print_stats_maybe();
-        
+        /*
         #ifdef I2C_ENABLED
             if (key_down_counter != last_counter) {
                 last_counter = key_down_counter;
@@ -379,6 +386,7 @@ int main() {
                 oled_update();
             }
         #endif
+        */
         
                 activity_led_off_maybe();
       }
