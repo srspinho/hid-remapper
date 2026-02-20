@@ -55,6 +55,7 @@
 
 // Lat_couter para contagem de teclas
 static uint32_t last_counter = 0;
+char buffer[16];      // buffer para string
 extern volatile uint32_t key_down_counter;
 
 uint64_t next_print = 0;
@@ -365,6 +366,7 @@ int main() {
         // ===== ATUALIZA OLED COM CONTADOR =====
         uint32_t current = key_down_counter;
 
+        /*
         if (current != last_value) {
 
             char buffer[32];
@@ -374,6 +376,21 @@ int main() {
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
             oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
             oled_update();  // <- envia os dados do buffer para o display
+            */
+
+        if (key_down_counter != last_counter) {
+            last_counter = key_down_counter;
+
+            oled_clear();
+            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+        
+            // converte contador para string
+            snprintf(buffer, sizeof(buffer), "%d", key_down_counter);
+            oled_draw_string(0, 16, buffer, font_small_6x8, 6, 8);
+        
+            oled_update();  // envia para o display
+}
+        
             last_value = current;
         }
 #endif
