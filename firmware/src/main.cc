@@ -278,8 +278,8 @@ int main() {
     gpio_pull_up(SDA_PIN);
     gpio_pull_up(SCL_PIN);
     oled_init(I2C_BLOCK);
-    oled_clear();
-    oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+    //oled_clear();
+    //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
 #endif
 
     tud_sof_isr_set(sof_handler);
