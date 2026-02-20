@@ -111,6 +111,8 @@ add_executable(remapper_dual_a
     src/pico_debug/adi.c
     dual_b_binary.c
     src/ps_auth.cc
+    src/oled/oled.cc
+    src/oled/font_small_6x8.cc
     $<$<STREQUAL:${PICO_BOARD},remapper_v7>:src/i2c.cc>
     $<$<STREQUAL:${PICO_BOARD},remapper_v7>:src/mcp4651.cc>
 )
