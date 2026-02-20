@@ -1679,11 +1679,11 @@ void do_handle_received_report(const uint8_t* report, int len, uint16_t interfac
                 read_input_range(report, len, their.usage, their.usage_def, interface_idx, hub_port);
             }
         }
-        int32_t after = *state_ptr;
-        if (!(before & (1 << interface_idx)) &&
-         (after  & (1 << interface_idx))) {
-            key_down_counter++;
-        }
+        //int32_t after = *state_ptr;
+        //if (!(before & (1 << interface_idx)) &&
+        // (after  & (1 << interface_idx))) {
+        //    key_down_counter++;
+        //}
     }
 
     if (monitor_enabled) {
