@@ -288,6 +288,7 @@ int main() {
 #endif
 */
 #ifdef I2C_ENABLED
+    oled_init(I2C_BLOCK);
     oled_clear();
     oled_draw_string(0, 0, "TESTE OLED", font_small_6x8, 6, 8);
     oled_update();
