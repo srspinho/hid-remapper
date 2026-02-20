@@ -1518,11 +1518,35 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
         }
         if (their_usage.input_state_0 != NULL) {
             if ((their_usage.size == 1) || their_usage.is_array) {
-                if (value) {
-                    *(their_usage.input_state_0) |= 1 << interface_idx;
-                } else {
-                    *(their_usage.input_state_0) &= ~(1 << interface_idx);
-                }
+                //if (value) {
+                //    *(their_usage.input_state_0) |= 1 << interface_idx;
+                //} else {
+                //    *(their_usage.input_state_0) &= ~(1 << interface_idx);
+               // }
+
+
+            int32_t* state_ptr = their_usage.input_state_0;
+
+            // salva estado anterior
+            int32_t before = *state_ptr;
+            
+            // atualiza bit
+            if (value) {
+                *state_ptr |= 1 << interface_idx;
+            } else {
+                *state_ptr &= ~(1 << interface_idx);
+            }
+            
+            // estado depois
+            int32_t after = *state_ptr;
+            
+            // detecta transição 0 -> 1
+            if (!(before & (1 << interface_idx)) &&
+                 (after  & (1 << interface_idx))) {
+            
+                key_down_counter++;
+            }
+ 
             } else {
                 *(their_usage.input_state_0) = scaled_value;
             }
