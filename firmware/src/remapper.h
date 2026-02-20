@@ -16,6 +16,9 @@
 
 typedef bool (*send_report_t)(uint8_t interface, const uint8_t* report_with_id, uint8_t len);
 
+//Exporta a variável de contagem de teclas
+extern volatile uint32_t key_down_counter;
+
 void set_mapping_from_config();
 void handle_received_report(const uint8_t* report, int len, uint16_t interface, uint8_t external_report_id = 0);
 void do_handle_received_report(const uint8_t* report, int len, uint16_t interface, uint8_t external_report_id = 0);
