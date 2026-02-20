@@ -56,7 +56,7 @@
 // Lat_couter para contagem de teclas
 static uint32_t last_counter = 0;
 char buffer_oled[16];      // buffer para string
-volatile uint32_t key_down_counter;
+extern volatile uint32_t key_down_counter;
 
 uint64_t next_print = 0;
 
