@@ -244,13 +244,10 @@ uint64_t get_unique_id() {
 }
 
 int main() {
+    
     my_mutexes_init();
     gpio_pins_init();
-#ifdef I2C_ENABLED
-    oled_init(I2C_BLOCK);
-    //oled_init(0x3C);
-    oled_clear();
-#endif
+
 #ifdef ADC_ENABLED
     adc_pins_init();
 #endif
@@ -264,14 +261,16 @@ int main() {
     tusb_init();
     stdio_init_all();
 
+    #ifdef I2C_ENABLED
+        oled_init(I2C_BLOCK);
+        oled_clear();
+        oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+        oled_update();
+    #endif
+
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
-
-    oled_clear();
-    oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
-    oled_update();
-    
 
     while (true) {
         bool tick;
