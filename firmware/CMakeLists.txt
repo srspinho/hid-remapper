@@ -50,7 +50,7 @@ add_executable(remapper
     src/oled/oled.cc
     src/oled/font_small_6x8.cc
     src/oled/font_medium_12x16.cc
-    src/olrd/font_large_16x24.cc
+    src/oled/font_large_16x24.cc
 )
 
 if((PICO_BOARD STREQUAL "pico") OR (PICO_BOARD STREQUAL "pico2"))
