@@ -192,6 +192,8 @@ target_link_libraries(remapper_serial
     hardware_flash
     tinyusb_device
     tinyusb_board
+    hardware_i2c
+    hardware_gpio
 )
 pico_add_extra_outputs(remapper_serial)
 
