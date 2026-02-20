@@ -278,21 +278,9 @@ int main() {
     gpio_pull_up(SCL_PIN);
     oled_init(I2C_BLOCK);
     oled_clear();
-    //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+    oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
 
-   if (current != last_value) {
-        char buffer[32];
-        snprintf(buffer, sizeof(buffer), "Count: %lu", current);
-        ssd1306_clear(&display);
-        ssd1306_draw_string(&display, 0, 0, 1, "Key Press Count:");
-        ssd1306_draw_string(&display, 0, 16, 2, buffer);
-        ssd1306_show(&display);
-        last_value = current;
-    }
-    sleep_ms(50);
-//}
-
-#endif
+    #endif
 
     tud_sof_isr_set(sof_handler);
 
