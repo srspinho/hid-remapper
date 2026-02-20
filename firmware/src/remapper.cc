@@ -44,6 +44,9 @@ const uint8_t resolution_multiplier_masks[] = {
     H_RESOLUTION_BITMASK,
 };
 
+// Contar as teclas Key down
+volatile uint32_t key_down_counter = 0;
+
 std::vector<reverse_mapping_t> reverse_mapping;
 std::vector<reverse_mapping_t> reverse_mapping_macros;
 std::vector<reverse_mapping_t> reverse_mapping_layers;
@@ -1657,6 +1660,9 @@ void do_handle_received_report(const uint8_t* report, int len, uint16_t interfac
 
     uint8_t interface_idx = interface_index[interface];
     uint8_t hub_port = hub_ports[interface >> 8];
+    //Colocar a variável de verificação
+    int32_t before = *state_ptr;
+    
     if (hub_port != HUB_PORT_NONE) {
         active_ports_mask |= 1 << hub_port;
     }
@@ -1672,6 +1678,11 @@ void do_handle_received_report(const uint8_t* report, int len, uint16_t interfac
             } else {
                 read_input_range(report, len, their.usage, their.usage_def, interface_idx, hub_port);
             }
+        }
+        int32_t after = *state_ptr;
+        if (!(before & (1 << interface_idx)) &&
+         (after  & (1 << interface_idx))) {
+            key_down_counter++;
         }
     }
 
