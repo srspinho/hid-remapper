@@ -50,6 +50,7 @@
 
 #define SDA_PIN 20
 #define SCL_PIN 21
+#define I2C_ENABLED
 
 uint64_t next_print = 0;
 
