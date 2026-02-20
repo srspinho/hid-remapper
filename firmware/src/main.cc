@@ -29,7 +29,10 @@
 #include "remapper.h"
 #include "tick.h"
 #include "oled/oled.h"
-#include "hardware/i2c.h"
+
+#ifdef I2C_ENABLED
+    #include "hardware/i2c.h"
+#endif
 
 // RP2350 UF2s wipe the last sector of flash every time
 // because of RP2350-E10 errata mitigation. So we put
