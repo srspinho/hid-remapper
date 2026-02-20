@@ -372,7 +372,8 @@ int main() {
         
                 oled_clear();
                 oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
-                snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
+                //snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
+                snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
                 oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
         
                 oled_update();
