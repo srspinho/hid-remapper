@@ -387,7 +387,7 @@ int main() {
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
         
             // converte contador para string
-            snprintf(buffer_oled, sizeof(buffer), "%lu", key_down_counter);
+            snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
             oled_draw_string(0, 16, buffer_oled, font_small_6x8, 6, 8);
         
             oled_update();  // envia para o display
