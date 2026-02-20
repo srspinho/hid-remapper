@@ -30,7 +30,7 @@
 #include "tick.h"
 #include "oled/oled.h"
 #include "oled/font_small_6x8.h"
-
+#define I2C_ENABLED
 #ifdef I2C_ENABLED
     #include "hardware/i2c.h"
 #endif
@@ -50,7 +50,7 @@
 
 #define SDA_PIN 20
 #define SCL_PIN 21
-#define I2C_ENABLED
+//#define I2C_ENABLED
 #define I2C_BLOCK i2c0
 
 // Lat_couter para contagem de teclas
