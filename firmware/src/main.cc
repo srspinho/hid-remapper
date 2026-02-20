@@ -277,7 +277,7 @@ int main() {
 
     
 #ifdef I2C_ENABLED
-    i2c_init(I2C_BLOCK, 400000);
+    i2c_init(I2C_BLOCK, 100000);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
     gpio_pull_up(SDA_PIN);
@@ -385,7 +385,7 @@ int main() {
         oled_clear();
         oled_draw_string(0, 0, "LOOP", font_small_6x8, 6, 8);
         oled_update();
-        sleep_ms(500);
+        sleep_ms(5);
      #endif
         
                 activity_led_off_maybe();
