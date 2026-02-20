@@ -29,6 +29,7 @@
 #include "remapper.h"
 #include "tick.h"
 #include "oled/oled.h"
+#include "oled/font_small_6x8.h"
 
 #ifdef I2C_ENABLED
     #include "hardware/i2c.h"
