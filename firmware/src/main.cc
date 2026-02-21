@@ -303,7 +303,7 @@ int main() {
         bool tick;
         bool new_report;
         read_report(&new_report, &tick);
-        uint64_t now = time_us_64();  
+        uint64_t now_oled = time_us_64();  
 
         if (new_report) {
             activity_led_on();
@@ -376,7 +376,7 @@ int main() {
       
  #ifdef I2C_ENABLED
         if (now_oled >= next_oled_update) {
-            next_oled_update = now + 5000; // 200 ms
+            next_oled_update = now_oled + 5000; // 200 ms
 
             oled_clear();
             oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
