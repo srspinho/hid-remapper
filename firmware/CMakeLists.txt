@@ -129,6 +129,7 @@ target_link_libraries(remapper_dual_a
     tinyusb_board
     pico_unique_id
     hardware_i2c
+    pico_multicore
 )
 pico_generate_pio_header(remapper_dual_a ${CMAKE_CURRENT_LIST_DIR}/src/pico_debug/swd.pio)
 pico_add_extra_outputs(remapper_dual_a)
