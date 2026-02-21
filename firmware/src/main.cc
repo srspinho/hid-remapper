@@ -30,6 +30,8 @@
 #include "tick.h"
 #include "oled/oled.h"
 #include "oled/font_small_6x8.h"
+#include "pico/multicore.h"
+#include "hardware/sync.h"
 #define I2C_ENABLED
 #ifdef I2C_ENABLED
     #include "hardware/i2c.h"
@@ -80,6 +82,33 @@ bool set_gpio_dir_pending = false;
 
 #ifdef ADC_ENABLED
 uint16_t prev_adc_state[NADCS] = { 0 };
+#endif
+
+#ifdef I2C_ENABLED
+void core1_oled_task() {
+
+    char buffer_oled[16];
+    uint64_t next_update = 0;
+
+    while (true) {
+
+        uint64_t now = time_us_64();
+
+        if (now >= next_update) {
+            next_update = now + 200000; // 200 ms
+
+            oled_clear();
+            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+
+            snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
+            oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);
+
+            oled_update();
+        }
+
+        sleep_ms(10); // pequeno descanso só pro core1
+    }
+}
 #endif
 
 void print_stats_maybe() {
@@ -292,6 +321,10 @@ int main() {
     //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
 #endif
 
+#ifdef I2C_ENABLED
+    multicore_launch_core1(core1_oled_task);
+#endif
+
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
@@ -373,7 +406,7 @@ int main() {
         
                 print_stats_maybe();
         
-      
+ /*     
  #ifdef I2C_ENABLED
         if (now_oled >= next_oled_update) {
             next_oled_update = now_oled + 5000; // 200 ms
@@ -388,6 +421,7 @@ int main() {
         #endif
         
 }
+*/
         /*
         #ifdef I2C_ENABLED
             if (key_down_counter != last_counter) {
