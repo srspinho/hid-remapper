@@ -194,6 +194,7 @@ target_link_libraries(remapper_serial
     tinyusb_board
     hardware_i2c
     hardware_gpio
+    pico_multicore
 )
 pico_add_extra_outputs(remapper_serial)
 
@@ -211,6 +212,7 @@ target_include_directories(flash_b_side PRIVATE
 target_link_libraries(flash_b_side
     pico_stdlib
     hardware_pio
+    pico_multicore
 )
 pico_generate_pio_header(flash_b_side ${CMAKE_CURRENT_LIST_DIR}/src/pico_debug/swd.pio)
 pico_add_extra_outputs(flash_b_side)
