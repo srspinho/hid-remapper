@@ -84,35 +84,6 @@ bool set_gpio_dir_pending = false;
 uint16_t prev_adc_state[NADCS] = { 0 };
 #endif
 
-/*
-#ifdef I2C_ENABLED
-void core1_oled_task() {
-
-    char buffer_oled[16];
-    uint64_t next_update = 0;
-
-    while (true) {
-
-        uint64_t now = time_us_64();
-
-        if (now >= next_update) {
-            next_update = now + 200000; // 200 ms
-
-            oled_clear();
-            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
-
-            snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
-            oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);
-
-            oled_update();
-        }
-
-        sleep_ms(10); // pequeno descanso só pro core1
-    }
-}
-#endif
-*/
-
 void print_stats_maybe() {
     uint64_t now = time_us_64();
     if (now > next_print) {
@@ -301,6 +272,7 @@ int main() {
 #ifdef ADC_ENABLED
     adc_pins_init();
 #endif
+    
     tick_init();
     load_config(FLASH_CONFIG_IN_MEMORY);
     our_descriptor = &our_descriptors[our_descriptor_number];
@@ -310,7 +282,6 @@ int main() {
     extra_init();
     tusb_init();
     stdio_init_all();
-
     
 #ifdef I2C_ENABLED
     i2c_init(I2C_BLOCK, 100000);
@@ -319,15 +290,10 @@ int main() {
     gpio_pull_up(SDA_PIN);
     gpio_pull_up(SCL_PIN);
     oled_init(I2C_BLOCK);
-    //oled_clear();
-    //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
+    oled_clear();
+    oled_draw_string(0, 0, "Teste OLED", font_small_6x8, 6, 8); 
+    oled_update();
 #endif
-
-/*
-#ifdef I2C_ENABLED
-    multicore_launch_core1(core1_oled_task);
-#endif
-*/
 
     tud_sof_isr_set(sof_handler);
 
@@ -340,6 +306,7 @@ int main() {
         bool tick;
         bool new_report;
         read_report(&new_report, &tick);
+        
         uint64_t now_oled = time_us_64();  
 
         if (new_report) {
@@ -410,47 +377,19 @@ int main() {
         
                 print_stats_maybe();
         
- /*     
- #ifdef I2C_ENABLED
-        if (now_oled >= next_oled_update) {
-            next_oled_update = now_oled + 5000; // 200 ms
-
-            oled_clear();
-            oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
-
-            snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
-            oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);
-
-            oled_update();
-        #endif
-        
-}
-*/
- 
         #ifdef I2C_ENABLED
             if (key_down_counter != last_counter) {
                 last_counter = key_down_counter;
         
                 oled_clear();
                 oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
-                //snprintf(buffer_oled, sizeof(buffer_oled), "%lu", key_down_counter);
                 snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
                 oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
         
                 oled_update();
             }
         #endif
-    
-
-     /*   
-     #ifdef I2C_ENABLED
-        oled_clear();
-        oled_draw_string(0, 0, "LOOP", font_small_6x8, 6, 8);
-        oled_update();
-        sleep_ms(5);
-     #endif
-     */
-        
+            
                 activity_led_off_maybe();
       }
         
