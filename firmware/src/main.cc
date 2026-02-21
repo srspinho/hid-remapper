@@ -1,4 +1,4 @@
-#include <set>
+T#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -291,7 +291,7 @@ int main() {
     gpio_pull_up(SCL_PIN);
     oled_init(I2C_BLOCK);
     oled_clear();
-    oled_draw_string(0, 0, "Teste OLED", font_small_6x8, 6, 8); 
+    oled_draw_string(0, 0, "TESTE OLED", font_small_6x8, 6, 8); 
     oled_update();
 #endif
 
@@ -315,9 +315,9 @@ int main() {
                 if (key_down_counter != last_counter) {
                     last_counter = key_down_counter;
                     oled_clear();
-                    oled_draw_string(0, 0, "Key Count:", font_small_6x8, 6, 8);
+                    oled_draw_string(12, 0, "COUNT: ", font_small_6x8, 6, 8);
                     snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
-                    oled_draw_string(0, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+                    oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
                     oled_update();
                 }
             #endif
