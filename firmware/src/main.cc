@@ -60,7 +60,7 @@
 #endif
 
 static uint64_t next_oled_update = 0;
-uint64_t now = time_us_64();
+uint64_t now_oled = time_us_64();
 
 //char buffer_oled[16];      // buffer para string
 extern volatile uint32_t key_down_counter;
@@ -373,7 +373,7 @@ int main() {
                 print_stats_maybe();
         
  #ifdef I2C_ENABLED
-        if (now >= next_oled_update) {
+        if (now_oled >= next_oled_update) {
             next_oled_update = now + 5000; // 200 ms
 
             oled_clear();
