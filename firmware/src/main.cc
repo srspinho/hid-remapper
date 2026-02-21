@@ -84,6 +84,7 @@ bool set_gpio_dir_pending = false;
 uint16_t prev_adc_state[NADCS] = { 0 };
 #endif
 
+/*
 #ifdef I2C_ENABLED
 void core1_oled_task() {
 
@@ -110,6 +111,7 @@ void core1_oled_task() {
     }
 }
 #endif
+*/
 
 void print_stats_maybe() {
     uint64_t now = time_us_64();
@@ -321,9 +323,11 @@ int main() {
     //oled_draw_string(0, 0, "OLED OK", font_small_6x8, 6, 8);
 #endif
 
+/*
 #ifdef I2C_ENABLED
     multicore_launch_core1(core1_oled_task);
 #endif
+*/
 
     tud_sof_isr_set(sof_handler);
 
@@ -422,7 +426,7 @@ int main() {
         
 }
 */
-        /*
+ 
         #ifdef I2C_ENABLED
             if (key_down_counter != last_counter) {
                 last_counter = key_down_counter;
@@ -436,7 +440,7 @@ int main() {
                 oled_update();
             }
         #endif
-        */
+    
 
      /*   
      #ifdef I2C_ENABLED
