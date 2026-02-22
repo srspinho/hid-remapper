@@ -309,6 +309,7 @@ int main() {
         
         uint64_t now_oled = time_us_64();  
 
+        /*
         oled_clear();
         char buf[32];
         snprintf(buf, sizeof(buf), "%lu", key_down_counter);
@@ -316,6 +317,7 @@ int main() {
         oled_draw_string(0, 10, buf, font_small_6x8, 6, 8);
         oled_update();
         sleep_ms(5);
+        */
 
         if (new_report) {
             activity_led_on();
