@@ -1639,9 +1639,19 @@ inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t so
             (bits <= their_usage.logical_minimum + their_usage.usage_maximum - source_usage)) {
             uint32_t actual_usage = source_usage + bits - their_usage.logical_minimum;
             // for array range inputs, "key-up" events (value=0) don't show up in the monitor
+
+            if ((actual_usage & 0xFFFF) != 0) {
+                key_down_counter++;   // <<< AQUI
+                if (monitor_enabled) {
+                    monitor_usage(actual_usage, 1, hub_port);
+                }
+            }
+            
+            /*
             if (monitor_enabled && ((actual_usage & 0xFFFF) != 0)) {
                 monitor_usage(actual_usage, 1, hub_port);
             }
+            */
         }
     }
 }
