@@ -1551,18 +1551,15 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
                 *state_ptr |= 1 << interface_idx;
                 // TESTE TEMPORÁRIO
                  key_down_counter++;
-
           } else {
                 *state_ptr &= ~(1 << interface_idx);
           }
  /*
             } else {
                 *(their_usage.input_state_0) = scaled_value;
-            } */
+            } 
         }
-
-        
-        
+*/
         if (their_usage.input_state_n != NULL) {
             *(their_usage.input_state_n) = scaled_value;
         }
