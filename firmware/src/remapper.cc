@@ -1563,7 +1563,8 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
         if (their_usage.input_state_n != NULL) {
             *(their_usage.input_state_n) = scaled_value;
         }
-    }
+     }
+  }
 }
 
 inline void read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
