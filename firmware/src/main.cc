@@ -395,8 +395,6 @@ int main() {
             oled_update();
         }
 
-        static uint32_t debug_last = 0;
-
     static uint32_t debug_last = 0;
 
 if (key_down_counter != debug_last) {
