@@ -315,7 +315,7 @@ int main() {
         oled_draw_string(0, 0, "CNT:", font_small_6x8, 6, 8);
         oled_draw_string(0, 10, buf, font_small_6x8, 6, 8);
         oled_update();
-        sleep_ms(200);
+        sleep_ms(5);
 
         if (new_report) {
             activity_led_on();
