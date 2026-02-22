@@ -374,43 +374,29 @@ int main() {
                     persist_config_return_code = persist_config();
                     need_to_persist_config = false;
                 }
-
-        
         /*
         #ifdef I2C_ENABLED
-                if (key_down_counter != last_counter) {
-                    last_counter = key_down_counter;
-                    oled_clear();
-                    oled_draw_string(12, 0, "COUNT: ", font_small_6x8, 6, 8);
-               //     snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
-               //     oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
-                      oled_draw_string(12, 10, "TESTE 02", font_small_6x8, 6, 8);  // Y ajustado
-                    oled_update();
-                }
-            #endif
-        */
-
-        if (key_down_counter > 0) {
+          if (key_down_counter > 0) {
             oled_draw_string(0, 20, "ENTROU", font_small_6x8, 6, 8);
             oled_update();
-        }
-
-    static uint32_t debug_last = 0;
-
-if (key_down_counter != debug_last) {
-    debug_last = key_down_counter;
-
-    oled_clear();  // opcional, mas recomendado
-
-    oled_draw_string(12, 0, "COUNT:", font_small_6x8, 6, 8);
-    oled_draw_string(12, 10, "TESTE 02", font_small_6x8, 6, 8);
-
-    oled_update();   // <<< ESSENCIAL
+         }
+       #endif
+    */
+        
+        static uint32_t debug_last = 0;
+        #ifdef I2C_ENABLED
+            if (key_down_counter != debug_last) {
+                debug_last = key_down_counter;
+                oled_clear();  // opcional, mas recomendado
+                oled_draw_string(12, 0, "COUNT:", font_small_6x8, 6, 8);
+                oled_draw_string(12, 10, "TESTE 02", font_small_6x8, 6, 8);
+                oled_update();   // <<< ESSENCIAL
+        #endif
 }
         
                 print_stats_maybe();            
                 activity_led_off_maybe();
-      }
+  }
         
             return 0;
 }
