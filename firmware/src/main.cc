@@ -392,11 +392,9 @@ int main() {
                 oled_update();
             }
        #endif
-        
-}
-        
-                print_stats_maybe();            
-                activity_led_off_maybe();
+            
+       print_stats_maybe();            
+       activity_led_off_maybe();
   }
         
             return 0;
