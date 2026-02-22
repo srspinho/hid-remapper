@@ -1482,11 +1482,19 @@ void monitor_usage(uint32_t usage, int32_t value, uint8_t hub_port) {
     };
 }
 
-inline void read_input(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx) {
+inline void read_input(const uint8_t* report, int len,
+                       uint32_t source_usage,
+                       const usage_def_t& their_usage,
+                       uint8_t interface_idx)
+{
     int32_t value = 0;
+
     if (their_usage.is_array) {
         for (unsigned int i = 0; i < their_usage.count; i++) {
-            uint32_t bits = get_bits(report, len, their_usage.bitpos + i * their_usage.size, their_usage.size);
+            uint32_t bits = get_bits(report, len,
+                                     their_usage.bitpos + i * their_usage.size,
+                                     their_usage.size);
+
             if (((their_usage.index_mask == 0) && (bits == their_usage.index)) ||
                 (their_usage.index_mask & (1 << bits))) {
                 value = 1;
@@ -1494,8 +1502,13 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
             }
         }
     } else {
-        value = get_bits(report, len, their_usage.bitpos, their_usage.size);
-        if ((their_usage.logical_minimum < 0) || (their_usage.logical_maximum < 0)) {
+        value = get_bits(report, len,
+                         their_usage.bitpos,
+                         their_usage.size);
+
+        if ((their_usage.logical_minimum < 0) ||
+            (their_usage.logical_maximum < 0)) {
+
             if (value & (1 << (their_usage.size - 1))) {
                 value |= 0xFFFFFFFF << their_usage.size;
             }
@@ -1503,69 +1516,52 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
     }
 
     if (their_usage.is_relative) {
+
         if (their_usage.input_state_0 != NULL) {
             *(their_usage.input_state_0) += value;
         }
+
         if (their_usage.input_state_n != NULL) {
-            *(their_usage.input_state_n) = value;  // XXX does it need to be += ?
+            *(their_usage.input_state_n) = value;
         }
+
     } else {
+
         int32_t scaled_value;
+
         if (their_usage.should_be_scaled) {
-            scaled_value = (int64_t) (value - their_usage.logical_minimum) * 255 / (their_usage.logical_maximum - their_usage.logical_minimum);  // XXX
+            scaled_value =
+                (int64_t)(value - their_usage.logical_minimum) * 255 /
+                (their_usage.logical_maximum - their_usage.logical_minimum);
         } else {
             scaled_value = value;
         }
+
+        // ----------- BOTÕES / TECLAS -------------
         if (their_usage.input_state_0 != NULL) {
+
             if ((their_usage.size == 1) || their_usage.is_array) {
-                //if (value) {
-                //    *(their_usage.input_state_0) |= 1 << interface_idx;
-                //} else {
-                //    *(their_usage.input_state_0) &= ~(1 << interface_idx);
-               // }
 
-            int32_t* state_ptr = their_usage.input_state_0;
+                int32_t* state_ptr = their_usage.input_state_0;
 
-            // salva estado anterior
-            int32_t before = *state_ptr;
-            
-            // atualiza bit
-            /*
-            if (value) {
-                *state_ptr |= 1 << interface_idx;
-            } else {
-                *state_ptr &= ~(1 << interface_idx);
+                if (value) {
+                    *state_ptr |= 1 << interface_idx;
+
+                    // 🔎 TESTE TEMPORÁRIO
+                    key_down_counter++;
+
+                } else {
+                    *state_ptr &= ~(1 << interface_idx);
+                }
+
             }
-            
-            // estado depois
-            int32_t after = *state_ptr;
-            
-            // detecta transição 0 -> 1
-            if (!(before & (1 << interface_idx)) &&
-                 (after  & (1 << interface_idx))) {
-            
-                key_down_counter++;
-            }*/
-
-           if (value) {
-                *state_ptr |= 1 << interface_idx;
-                // TESTE TEMPORÁRIO
-                 key_down_counter++;
-          } else {
-                *state_ptr &= ~(1 << interface_idx);
-          }
- /*
-            } else {
-                *(their_usage.input_state_0) = scaled_value;
-            } 
         }
-*/
+
+        // ----------- VALORES ANALÓGICOS -------------
         if (their_usage.input_state_n != NULL) {
             *(their_usage.input_state_n) = scaled_value;
         }
-     }
-  }
-}
+    }
 }
 
 inline void read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
