@@ -46,6 +46,7 @@ const uint8_t resolution_multiplier_masks[] = {
 
 // Contar as teclas Key down
 volatile uint32_t key_down_counter = 0;
+static uint8_t previous_keys[6] = {0};
 
 std::vector<reverse_mapping_t> reverse_mapping;
 std::vector<reverse_mapping_t> reverse_mapping_macros;
