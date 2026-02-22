@@ -375,7 +375,9 @@ int main() {
                     need_to_persist_config = false;
                 }
 
-            #ifdef I2C_ENABLED
+        
+        /*
+        #ifdef I2C_ENABLED
                 if (key_down_counter != last_counter) {
                     last_counter = key_down_counter;
                     oled_clear();
@@ -386,6 +388,12 @@ int main() {
                     oled_update();
                 }
             #endif
+        */
+
+        if (key_down_counter > 0) {
+            oled_draw_string(0, 20, "ENTROU", font_small_6x8, 6, 8);
+            oled_update();
+        }
         
                 print_stats_maybe();            
                 activity_led_off_maybe();
