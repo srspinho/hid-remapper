@@ -1641,7 +1641,30 @@ inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t so
             // for array range inputs, "key-up" events (value=0) don't show up in the monitor
 
             if ((actual_usage & 0xFFFF) != 0) {
-                key_down_counter++;   // <<< AQUI
+                
+                bool already_present = false;
+
+                for (int k = 0; k < 6; k++) {
+                    if (previous_keys[k] == bits) {
+                    already_present = true;
+                    break;
+                }
+
+        for (int k = 0; k < 6; k++) {
+            previous_keys[k] = 0;
+        }
+
+    for (unsigned int i = 0; i < their_usage.count && i < 6; i++) {
+        previous_keys[i] = get_bits(report, len,
+                                their_usage.bitpos + i * their_usage.size,
+                                their_usage.size);
+    }
+}
+
+if (!already_present && bits != 0) {
+    key_down_counter++;
+}
+                
                 if (monitor_enabled) {
                     monitor_usage(actual_usage, 1, hub_port);
                 }
