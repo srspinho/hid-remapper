@@ -1632,6 +1632,8 @@ inline void monitor_read_input(const uint8_t* report, int len, uint32_t source_u
 }
 
 inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
+    // Buffer local para teclas atuais
+    uint8_t current_keys[6] = {0};
     // is_array and !is_relative is implied
     for (unsigned int i = 0; i < their_usage.count; i++) {
         uint32_t bits = get_bits(report, len, their_usage.bitpos + i * their_usage.size, their_usage.size);
@@ -1645,27 +1647,45 @@ inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t so
                 
                 bool already_present = false;
 
-                for (int k = 0; k < 6; k++) {
-                    if (previous_keys[k] == bits) {
-                    already_present = true;
-                    break;
-                }
+                // Lê as 6 posições do report
+for (int i = 0; i < 6 && i < their_usage.count; i++) {
+    current_keys[i] = get_bits(report, len,
+        their_usage.bitpos + i * their_usage.size,
+        their_usage.size);
+}
 
-        for (int k = 0; k < 6; k++) {
-            previous_keys[k] = 0;
+// Para cada tecla atual, verifica se é nova
+for (int i = 0; i < 6; i++) {
+
+    uint8_t key = current_keys[i];
+
+    if (key == 0)
+        continue;
+
+    bool found = false;
+
+    for (int j = 0; j < 6; j++) {
+        if (previous_keys[j] == key) {
+            found = true;
+            break;
         }
+    }
 
-    for (unsigned int i = 0; i < their_usage.count && i < 6; i++) {
-        previous_keys[i] = get_bits(report, len,
-                                their_usage.bitpos + i * their_usage.size,
-                                their_usage.size);
+    if (!found) {
+        key_down_counter++;   // 🔥 conta apenas key-down real
     }
 }
 
-if (!already_present && bits != 0) {
-    key_down_counter++;
-}
-                
+    // Atualiza estado anterior
+    for (int i = 0; i < 6; i++) {
+        previous_keys[i] = current_keys[i];
+    }
+    }
+    
+    if (!already_present && bits != 0) {
+        key_down_counter++;
+    }
+                    
                 if (monitor_enabled) {
                     monitor_usage(actual_usage, 1, hub_port);
                 }
