@@ -1524,13 +1524,13 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
                 //    *(their_usage.input_state_0) &= ~(1 << interface_idx);
                // }
 
-
             int32_t* state_ptr = their_usage.input_state_0;
 
             // salva estado anterior
             int32_t before = *state_ptr;
             
             // atualiza bit
+            /*
             if (value) {
                 *state_ptr |= 1 << interface_idx;
             } else {
@@ -1545,12 +1545,24 @@ inline void read_input(const uint8_t* report, int len, uint32_t source_usage, co
                  (after  & (1 << interface_idx))) {
             
                 key_down_counter++;
-            }
- 
+            }*/
+
+           if (value) {
+                *state_ptr |= 1 << interface_idx;
+                // TESTE TEMPORÁRIO
+                 key_down_counter++;
+
+          } else {
+                *state_ptr &= ~(1 << interface_idx);
+          }
+ /*
             } else {
                 *(their_usage.input_state_0) = scaled_value;
-            }
+            } */
         }
+
+        
+        
         if (their_usage.input_state_n != NULL) {
             *(their_usage.input_state_n) = scaled_value;
         }
