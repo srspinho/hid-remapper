@@ -1647,40 +1647,49 @@ inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t so
                 
                 bool already_present = false;
 
-                // Lê as 6 posições do report
-for (int i = 0; i < 6 && i < their_usage.count; i++) {
-    current_keys[i] = get_bits(report, len,
-        their_usage.bitpos + i * their_usage.size,
-        their_usage.size);
-}
+            // ========= DETECTOR REAL DE KEY-DOWN =========
+            
+            // Buffer local com estado atual
+            uint8_t current_keys[6] = {0};
+            
+            // Lê até 6 teclas do report
+            for (int i = 0; i < 6 && i < their_usage.count; i++) {
+                current_keys[i] = get_bits(report, len,
+                    their_usage.bitpos + i * their_usage.size,
+                    their_usage.size);
+            }
+            
+            // Verifica novas teclas
+            for (int i = 0; i < 6; i++) {
+            
+                uint8_t key = current_keys[i];
+            
+                if (key == 0)
+                    continue;
+            
+                bool found = false;
+            
+                for (int j = 0; j < 6; j++) {
+                    if (previous_keys[j] == key) {
+                        found = true;
+                        break;
+                    }
+                }
+            
+                if (!found) {
+                    key_down_counter++;
+                }
+            }
 
-// Para cada tecla atual, verifica se é nova
-for (int i = 0; i < 6; i++) {
-
-    uint8_t key = current_keys[i];
-
-    if (key == 0)
-        continue;
-
-    bool found = false;
-
-    for (int j = 0; j < 6; j++) {
-        if (previous_keys[j] == key) {
-            found = true;
-            break;
+        // Atualiza estado anterior
+        for (int i = 0; i < 6; i++) {
+            previous_keys[i] = current_keys[i];
         }
-    }
-
-    if (!found) {
-        key_down_counter++;   // 🔥 conta apenas key-down real
-    }
-}
-
-    // Atualiza estado anterior
-    for (int i = 0; i < 6; i++) {
-        previous_keys[i] = current_keys[i];
-    }
-    }
+            // Atualiza estado anterior
+            for (int i = 0; i < 6; i++) {
+                previous_keys[i] = current_keys[i];
+            }
+ }
     
     if (!already_present && bits != 0) {
         key_down_counter++;
@@ -1698,7 +1707,6 @@ for (int i = 0; i < 6; i++) {
             */
         }
     }
-}
 
 void handle_received_report(const uint8_t* report, int len, uint16_t interface, uint8_t external_report_id) {
     if (our_descriptor->handle_received_report != nullptr) {
