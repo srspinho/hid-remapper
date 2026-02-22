@@ -397,10 +397,18 @@ int main() {
 
         static uint32_t debug_last = 0;
 
-    if (key_down_counter != debug_last) {
-        debug_last = key_down_counter;
-         oled_draw_string(12, 10, "TESTE 02", font_small_6x8, 6, 8);  // Y ajustado
-    }
+    static uint32_t debug_last = 0;
+
+if (key_down_counter != debug_last) {
+    debug_last = key_down_counter;
+
+    oled_clear();  // opcional, mas recomendado
+
+    oled_draw_string(12, 0, "COUNT:", font_small_6x8, 6, 8);
+    oled_draw_string(12, 10, "TESTE 02", font_small_6x8, 6, 8);
+
+    oled_update();   // <<< ESSENCIAL
+}
         
                 print_stats_maybe();            
                 activity_led_off_maybe();
