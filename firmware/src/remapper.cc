@@ -1488,6 +1488,7 @@ inline void read_input(const uint8_t* report, int len,
                        uint8_t interface_idx)
 {
     int32_t value = 0;
+    key_down_counter++;
 
     if (their_usage.is_array) {
         for (unsigned int i = 0; i < their_usage.count; i++) {
