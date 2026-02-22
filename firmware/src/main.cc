@@ -311,16 +311,6 @@ int main() {
 
         if (new_report) {
             activity_led_on();
-            #ifdef I2C_ENABLED
-                if (key_down_counter != last_counter) {
-                    last_counter = key_down_counter;
-                    oled_clear();
-                    oled_draw_string(12, 0, "COUNT: ", font_small_6x8, 6, 8);
-                    snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
-                    oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
-                    oled_update();
-                }
-            #endif
         }
 
         if (their_descriptor_updated) {
@@ -384,6 +374,17 @@ int main() {
                     persist_config_return_code = persist_config();
                     need_to_persist_config = false;
                 }
+
+            #ifdef I2C_ENABLED
+                if (key_down_counter != last_counter) {
+                    last_counter = key_down_counter;
+                    oled_clear();
+                    oled_draw_string(12, 0, "COUNT: ", font_small_6x8, 6, 8);
+                    snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
+                    oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+                    oled_update();
+                }
+            #endif
         
                 print_stats_maybe();            
                 activity_led_off_maybe();
