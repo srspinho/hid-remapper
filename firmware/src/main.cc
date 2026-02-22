@@ -380,8 +380,9 @@ int main() {
                //     last_counter = key_down_counter;
                     oled_clear();
                     oled_draw_string(12, 0, "COUNT: ", font_small_6x8, 6, 8);
-                    snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
-                    oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+               //     snprintf(buffer_oled, sizeof(buffer_oled), "%-8lu", key_down_counter);
+               //     oled_draw_string(12, 10, buffer_oled, font_small_6x8, 6, 8);  // Y ajustado
+                 oled_draw_string(12, 10, key_down_counter, font_small_6x8, 6, 8);  // Y ajustado
                     oled_update();
               //  }
             #endif
