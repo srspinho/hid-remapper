@@ -1599,26 +1599,35 @@ inline void monitor_read_input(const uint8_t* report, int len, uint32_t source_u
 }
 
 inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
-    uint32_t actual_usage = source_usage + bits - their_usage.logical_minimum;
+    // Removi a linha que tentava usar 'bits' aqui fora, pois ela causava o erro.
+
     // is_array and !is_relative is implied
     for (unsigned int i = 0; i < their_usage.count; i++) {
-        //SRSP
+        // 1. Extrai o valor bruto (o código da tecla) do relatório
         uint32_t bits = get_bits(report, len, their_usage.bitpos + i * their_usage.size, their_usage.size);
-        if ((actual_usage & 0xFFFF) != 0) {
-            g_keyCodeCounter++; // Conta sempre que houver atividade de tecla
-        }
-        // XXX consider negative indexes
+
+        // 2. Verifica se o valor extraído é uma tecla válida (dentro do range esperado)
         if ((bits >= their_usage.logical_minimum) &&
             (bits <= their_usage.logical_minimum + their_usage.usage_maximum - source_usage)) {
+            
+            // 3. Calcula o Usage ID real da tecla
             uint32_t actual_usage = source_usage + bits - their_usage.logical_minimum;
-            // for array range inputs, "key-up" events (value=0) don't show up in the monitor
-            if (monitor_enabled && ((actual_usage & 0xFFFF) != 0)) {
-                monitor_usage(actual_usage, 1, hub_port);
+
+            // 4. Se o Usage ID não for 0 (0 significa nenhuma tecla naquele slot do array)
+            if ((actual_usage & 0xFFFF) != 0) {
+                
+                // INCREMENTO AQUI: 
+                // Esta é a zona segura. 'actual_usage' é uma tecla real sendo pressionada.
+                g_keyCodeCounter++; 
+
+                // Mantém a funcionalidade original do monitor web
+                if (monitor_enabled) {
+                    monitor_usage(actual_usage, 1, hub_port);
+                }
             }
         }
     }
 }
-
 void handle_received_report(const uint8_t* report, int len, uint16_t interface, uint8_t external_report_id) {
     if (our_descriptor->handle_received_report != nullptr) {
         our_descriptor->handle_received_report(report, len, interface, external_report_id);
