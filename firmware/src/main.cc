@@ -65,7 +65,7 @@ bool set_gpio_dir_pending = false;
 #define PIN_DC      5   // Data/Command
 #define PIN_CS      6   // Chip Select
 
-extern volatile uint32_t g_keyCodeCounter;
+volatile uint32_t g_keyCodeCounter = 0;
 
 // Fonte 5x7 simples (ASCII 0-9 e Espaço)
 const uint8_t font_5x7[11][5] = {
