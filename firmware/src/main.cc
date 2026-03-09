@@ -141,7 +141,7 @@ void core1_entry() {
 
     while (true) {
         // TESTE: Comente a linha abaixo depois que funcionar
-        // g_keyCodeCounter++; 
+        g_keyCodeCounter++; 
 
         uint32_t current = g_keyCodeCounter;
         if (current != last_count) {
