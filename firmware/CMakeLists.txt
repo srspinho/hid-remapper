@@ -65,6 +65,7 @@ target_link_libraries(remapper
     pico_multicore
     pico_unique_id
     hardware_spi
+    pico_multicore
     hardware_pio
     hardware_dma
     hardware_flash
@@ -121,6 +122,7 @@ target_link_libraries(remapper_dual_a
     $<$<STREQUAL:${PICO_BOARD},remapper_v7>:hardware_i2c>
     hardware_pio
     hardware_spi
+    pico_multicore
     tinyusb_device
     tinyusb_board
     pico_unique_id
@@ -148,6 +150,7 @@ target_link_libraries(remapper_dual_b
     tinyusb_board
     usb_midi_host
     hardware_spi
+    pico_multicore
 )
 pico_add_extra_outputs(remapper_dual_b)
 pico_add_hex_output(remapper_dual_b)
@@ -182,6 +185,7 @@ target_include_directories(remapper_serial PRIVATE
 target_link_libraries(remapper_serial
     pico_stdlib
     hardware_spi
+    pico_multicore
     pico_unique_id
     hardware_flash
     tinyusb_device
@@ -204,6 +208,7 @@ target_link_libraries(flash_b_side
     pico_stdlib
     hardware_pio
     hardware_spi
+    pico_multicore
 )
 pico_generate_pio_header(flash_b_side ${CMAKE_CURRENT_LIST_DIR}/src/pico_debug/swd.pio)
 pico_add_extra_outputs(flash_b_side)
