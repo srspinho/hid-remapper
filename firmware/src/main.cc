@@ -124,7 +124,18 @@ void update_display_count(uint32_t count) {
     }
 }
 
+void core1_entry() {
+    sh1106_init();
+    uint32_t last_count = 0xFFFFFFFF;
 
+    while (true) {
+        if (g_keyCodeCounter != last_count) {
+            last_count = g_keyCodeCounter;
+            update_display_count(last_count);
+        }
+        sleep_ms(20); // Atualiza a 50Hz para economizar energia
+    }
+}
 
 #ifdef ADC_ENABLED
 uint16_t prev_adc_state[NADCS] = { 0 };
@@ -332,6 +343,8 @@ int main() {
     tud_sof_isr_set(sof_handler);
 
     next_print = time_us_64() + 1000000;
+
+    multicore_launch_core1(core1_entry);
 
     while (true) {
         bool tick;
