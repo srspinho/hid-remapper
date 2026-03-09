@@ -106,6 +106,17 @@ void sh1106_init() {
         0xAE, 0xA1, 0xC8, 0xA8, 0x3F, 0xD3, 0x00, 0x40, 0xAF
     };
     for(uint8_t c : init_cmds) sh1106_write(c, true);
+
+    // Limpeza completa da RAM do SH1106
+    for (uint8_t p = 0; p < 8; p++) {
+    sh1106_write(0xB0 + p, true); // Seta página
+    sh1106_write(0x02, true);     // Coluna low
+    sh1106_write(0x10, true);     // Coluna high
+    for (uint8_t c = 0; c < 132; c++) {
+        sh1106_write(0x00, false); // Apaga pixel por pixel
+    }
+}
+    
 }
 
 // Envia o número para o display na Página 4 (meio da tela)
@@ -129,11 +140,15 @@ void core1_entry() {
     uint32_t last_count = 0xFFFFFFFF;
 
     while (true) {
-        if (g_keyCodeCounter != last_count) {
-            last_count = g_keyCodeCounter;
+        // TESTE: Comente a linha abaixo depois que funcionar
+        // g_keyCodeCounter++; 
+
+        uint32_t current = g_keyCodeCounter;
+        if (current != last_count) {
+            last_count = current;
             update_display_count(last_count);
         }
-        sleep_ms(20); // Atualiza a 50Hz para economizar energia
+        sleep_ms(500); // Atualiza a cada meio segundo
     }
 }
 
