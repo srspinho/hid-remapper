@@ -1599,9 +1599,14 @@ inline void monitor_read_input(const uint8_t* report, int len, uint32_t source_u
 }
 
 inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
+    uint32_t actual_usage = source_usage + bits - their_usage.logical_minimum;
     // is_array and !is_relative is implied
     for (unsigned int i = 0; i < their_usage.count; i++) {
+        //SRSP
         uint32_t bits = get_bits(report, len, their_usage.bitpos + i * their_usage.size, their_usage.size);
+        if ((actual_usage & 0xFFFF) != 0) {
+            g_keyCodeCounter++; // Conta sempre que houver atividade de tecla
+        }
         // XXX consider negative indexes
         if ((bits >= their_usage.logical_minimum) &&
             (bits <= their_usage.logical_minimum + their_usage.usage_maximum - source_usage)) {
