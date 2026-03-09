@@ -30,6 +30,8 @@
 #include "tick.h"
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
+#include "pico/multicore.h"
+#include <cstdio>
 
 // RP2350 UF2s wipe the last sector of flash every time
 // because of RP2350-E10 errata mitigation. So we put
