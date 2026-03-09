@@ -57,6 +57,75 @@ uint32_t prev_gpio_state = 0;
 uint64_t last_gpio_change[32] = { 0 };
 bool set_gpio_dir_pending = false;
 
+// Seus pinos confirmados
+#define SPI_PORT    spi0
+#define PIN_CLK     2   // SCK
+#define PIN_MOSI    3   // TX
+#define PIN_RST     4   // Reset
+#define PIN_DC      5   // Data/Command
+#define PIN_CS      6   // Chip Select
+
+extern volatile uint32_t g_keyCodeCounter;
+
+// Fonte 5x7 simples (ASCII 0-9 e Espaço)
+const uint8_t font_5x7[11][5] = {
+    {0x3E, 0x51, 0x49, 0x45, 0x3E}, // 0
+    {0x00, 0x42, 0x7F, 0x40, 0x00}, // 1
+    {0x42, 0x61, 0x51, 0x49, 0x46}, // 2
+    {0x21, 0x41, 0x45, 0x4B, 0x31}, // 3
+    {0x18, 0x14, 0x12, 0x7F, 0x10}, // 4
+    {0x27, 0x45, 0x45, 0x45, 0x39}, // 5
+    {0x3C, 0x4A, 0x49, 0x49, 0x30}, // 6
+    {0x01, 0x71, 0x09, 0x05, 0x03}, // 7
+    {0x36, 0x49, 0x49, 0x49, 0x36}, // 8
+    {0x06, 0x49, 0x49, 0x29, 0x1E}, // 9
+    {0x00, 0x00, 0x00, 0x00, 0x00}  // Espaço
+};
+
+void sh1106_write(uint8_t data, bool is_cmd) {
+    gpio_put(PIN_DC, !is_cmd);
+    gpio_put(PIN_CS, 0);
+    spi_write_blocking(SPI_PORT, &data, 1);
+    gpio_put(PIN_CS, 1);
+}
+
+void sh1106_init() {
+    // Inicializa SPI0 a 8MHz
+    spi_init(SPI_PORT, 8000 * 1000);
+    gpio_set_function(PIN_CLK, GPIO_FUNC_SPI);
+    gpio_set_function(PIN_MOSI, GPIO_FUNC_SPI);
+
+    gpio_init(PIN_RST); gpio_set_dir(PIN_RST, GPIO_OUT);
+    gpio_init(PIN_DC);  gpio_set_dir(PIN_DC, GPIO_OUT);
+    gpio_init(PIN_CS);  gpio_set_dir(PIN_CS, GPIO_OUT);
+
+    gpio_put(PIN_RST, 0); sleep_ms(10);
+    gpio_put(PIN_RST, 1); sleep_ms(10);
+
+    uint8_t init_cmds[] = {
+        0xAE, 0xA1, 0xC8, 0xA8, 0x3F, 0xD3, 0x00, 0x40, 0xAF
+    };
+    for(uint8_t c : init_cmds) sh1106_write(c, true);
+}
+
+// Envia o número para o display na Página 4 (meio da tela)
+void update_display_count(uint32_t count) {
+    char buf[12];
+    snprintf(buf, sizeof(buf), "%lu", count);
+
+    sh1106_write(0xB4, true); // Página 4
+    sh1106_write(0x02, true); // Lower Column (Offset 2 para SH1106)
+    sh1106_write(0x10, true); // Higher Column
+
+    for (int i = 0; buf[i] != '\0'; i++) {
+        uint8_t idx = (buf[i] >= '0' && buf[i] <= '9') ? buf[i] - '0' : 10;
+        for (int j = 0; j < 5; j++) sh1106_write(font_5x7[idx][j], false);
+        sh1106_write(0x00, false); // Espaçamento entre letras
+    }
+}
+
+
+
 #ifdef ADC_ENABLED
 uint16_t prev_adc_state[NADCS] = { 0 };
 #endif
