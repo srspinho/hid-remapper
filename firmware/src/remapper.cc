@@ -45,7 +45,7 @@ const uint8_t resolution_multiplier_masks[] = {
 };
 
 //SRSP
-extern volatile uint32_t g_keyCodeCounter;
+volatile uint32_t g_keyCodeCounter = 0;
 
 std::vector<reverse_mapping_t> reverse_mapping;
 std::vector<reverse_mapping_t> reverse_mapping_macros;
