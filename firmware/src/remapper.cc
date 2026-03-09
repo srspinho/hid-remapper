@@ -47,7 +47,7 @@ const uint8_t resolution_multiplier_masks[] = {
 
 //SRSP
 // Variáveis globais para controle de estado
-extern volatile uint32_t g_keyCodeCounter = 0;
+//extern volatile uint32_t g_keyCodeCounter = 0;
 std::set<uint32_t> keys_already_pressed; // Armazena as teclas que já foram contadas
 
 std::vector<reverse_mapping_t> reverse_mapping;
