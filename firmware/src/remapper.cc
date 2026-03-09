@@ -1,3 +1,4 @@
+#include <set> // No topo do arquivo
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -45,7 +46,9 @@ const uint8_t resolution_multiplier_masks[] = {
 };
 
 //SRSP
-volatile uint32_t g_keyCodeCounter = 0;
+// Variáveis globais para controle de estado
+extern volatile uint32_t g_keyCodeCounter = 0;
+std::set<uint32_t> keys_already_pressed; // Armazena as teclas que já foram contadas
 
 std::vector<reverse_mapping_t> reverse_mapping;
 std::vector<reverse_mapping_t> reverse_mapping_macros;
@@ -1599,35 +1602,46 @@ inline void monitor_read_input(const uint8_t* report, int len, uint32_t source_u
 }
 
 inline void monitor_read_input_range(const uint8_t* report, int len, uint32_t source_usage, const usage_def_t& their_usage, uint8_t interface_idx, uint8_t hub_port) {
-    // Removi a linha que tentava usar 'bits' aqui fora, pois ela causava o erro.
+    
+    // Conjunto para rastrear o que foi encontrado NESTE relatório específico
+    std::set<uint32_t> keys_in_this_report;
 
-    // is_array and !is_relative is implied
     for (unsigned int i = 0; i < their_usage.count; i++) {
-        // 1. Extrai o valor bruto (o código da tecla) do relatório
         uint32_t bits = get_bits(report, len, their_usage.bitpos + i * their_usage.size, their_usage.size);
 
-        // 2. Verifica se o valor extraído é uma tecla válida (dentro do range esperado)
         if ((bits >= their_usage.logical_minimum) &&
             (bits <= their_usage.logical_minimum + their_usage.usage_maximum - source_usage)) {
             
-            // 3. Calcula o Usage ID real da tecla
             uint32_t actual_usage = source_usage + bits - their_usage.logical_minimum;
 
-            // 4. Se o Usage ID não for 0 (0 significa nenhuma tecla naquele slot do array)
             if ((actual_usage & 0xFFFF) != 0) {
-                
-                // INCREMENTO AQUI: 
-                // Esta é a zona segura. 'actual_usage' é uma tecla real sendo pressionada.
-                g_keyCodeCounter++; 
+                keys_in_this_report.insert(actual_usage);
 
-                // Mantém a funcionalidade original do monitor web
+                // LÓGICA DE TRAVA:
+                // Só incrementa se a tecla NÃO estava no conjunto de teclas pressionadas anteriormente
+                if (keys_already_pressed.find(actual_usage) == keys_already_pressed.end()) {
+                    g_keyCodeCounter++;
+                    keys_already_pressed.insert(actual_usage); 
+                }
+
                 if (monitor_enabled) {
                     monitor_usage(actual_usage, 1, hub_port);
                 }
             }
         }
     }
+
+    // Limpeza: Se uma tecla estava no 'keys_already_pressed' mas NÃO apareceu 
+    // neste relatório, significa que ela foi SOLTA.
+    for (auto it = keys_already_pressed.begin(); it != keys_already_pressed.end(); ) {
+        if (keys_in_this_report.find(*it) == keys_in_this_report.end()) {
+            it = keys_already_pressed.erase(it); // Remove da memória de "pressionada"
+        } else {
+            ++it;
+        }
+    }
 }
+
 void handle_received_report(const uint8_t* report, int len, uint16_t interface, uint8_t external_report_id) {
     if (our_descriptor->handle_received_report != nullptr) {
         our_descriptor->handle_received_report(report, len, interface, external_report_id);
